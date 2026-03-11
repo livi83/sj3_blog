@@ -1,7 +1,3 @@
-<?php
-    require "../../app/core/App.php";
-    $app = new App();
-?>
 <!DOCTYPE html>
 <html>
 <head>
