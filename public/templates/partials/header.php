@@ -1,11 +1,18 @@
 <?php
-require '../../app/functions.php';
+
+require '../../app/core/Helper.php';
+require '../../app/core/Database.php';
+require '../../app/models/Contact.php';
+
+$db = new Database();
+$connection = $db->getConnection();
+
 ?>
 
 <!DOCTYPE html>
 <html>
-<head>
-	<title><?php echo getPageTitle(); ?></title>
+<head> 
+	<title><?php echo Helper::getPageTitle(); ?></title>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
