@@ -3,7 +3,7 @@
 require_once '../../app/core/Helper.php';
 require_once '../../app/core/Database.php';
 require_once '../../app/models/Contact.php';
-require_once '../../app/models/Categories.php';
+require_once '../../app/models/Category.php';
 
 $db = new Database();
 $connection = $db->getConnection();
