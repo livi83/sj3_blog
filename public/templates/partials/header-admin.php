@@ -1,3 +1,9 @@
+<?php
+
+require_once '../../app/core/Database.php';
+require_once '../../app/models/Categories.php';
+
+?>
 <!DOCTYPE html>
 <html lang="sk">
 <head>

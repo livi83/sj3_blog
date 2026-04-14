@@ -2,6 +2,7 @@
 
 class Helper
 {
+    //
     public static function getPageTitle(): string
     {
         $script = $_SERVER['SCRIPT_NAME'];

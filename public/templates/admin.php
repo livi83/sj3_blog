@@ -152,29 +152,63 @@
             <a href="category-create.php" class="btn btn-ghost">+ New Category</a>
         </div>
         <div class="table-container">
+            <?php
+                $category = new Category();
+                $categories = $category->all();
+
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+                    $id = (int)$_POST['id'];
+                    $type = $_POST['type'];
+
+                    if ($type === 'category') {
+                        $category->delete($id);
+                    }
+                }
+                
+                $categories = $category->all();
+
+            ?>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Názov kategórie</th>
                         <th>Slug</th>
+                        <th>Popis</th>
                         <th>Počet článkov</th>
                         <th>Akcie</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>#1</td>
-                        <td>Fashion</td>
-                        <td>fashion</td>
-                        <td>4</td>
-                        <td>
-                            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                                <a href="category-edit.php" class="btn btn-ghost">Edit</a>
-                                <a href="#" class="btn btn-ghost">Delete</a>
-                            </div>
-                        </td>
-                    </tr>
+                    <?php foreach ($categories as $cat): ?>
+                        <tr>
+                            <td>#<?php echo htmlspecialchars($cat->id); ?></td>
+                            <td><?php echo htmlspecialchars($cat->name); ?></td>
+                            <td><?php echo htmlspecialchars($cat->slug); ?></td>
+                            <td><?php echo htmlspecialchars($cat->description); ?></td>
+                            <td><?php echo $cat->posts_count; ?></td>
+                            <td>
+                                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                                    <a href="#" class="btn btn-ghost">Edit</a>
+                                    
+                                    <form method="POST" style="display:inline;" onsubmit="return confirm('Naozaj vymazať?')">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="type" value="category">
+                                        <input type="hidden" name="id" value="<?php echo $cat->id; ?>">
+                                        <button type="submit" class="btn btn-ghost" style="color: red; cursor: pointer;">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
+                    <?php if (empty($categories)): ?>
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Žiadne kategórie neboli nájdené.</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
