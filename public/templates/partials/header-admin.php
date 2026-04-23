@@ -1,3 +1,6 @@
+<?php
+	require_once('../../app/core/Helper.php');
+?>
 <!DOCTYPE html>
 <html lang="sk">
 <head>

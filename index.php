@@ -1,8 +1,5 @@
 <?php
+    require_once 'app/core/Redirect.php';
 
-require 'app/core/Redirect.php';
-
-$redirect = new Redirect('public/templates/home.php');
-$redirect->redirect();
-
+    Redirect::redirect('public/templates/home.php');
 ?>

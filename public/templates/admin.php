@@ -4,6 +4,7 @@ App::init();
 
 $category = new Category();
 $post = new Post();
+$user = new User();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
@@ -17,6 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         if ($type === 'post') {
             $post->delete($id);
         }
+
+        if ($type === 'user') {
+            $user->delete($id);
+        }
     }
 
     header('Location: admin.php');
@@ -25,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 $categories = $category->all();
 $posts = $post->all();
+$users = $user->all();
 
 include 'partials/header-admin.php';
 ?>
@@ -48,7 +54,7 @@ include 'partials/header-admin.php';
 
         <div class="card" style="padding:1.25rem;">
             <p style="margin:0; color:var(--text-secondary); font-size:0.875rem;">Celkom userov</p>
-            <h3 style="margin:0.5rem 0 0;">3</h3>
+            <h3 style="margin:0.5rem 0 0;"><?php echo count($users); ?></h3>
         </div>
 
         <div class="card" style="padding:1.25rem;">
@@ -234,19 +240,43 @@ include 'partials/header-admin.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>#1</td>
-                        <td>Jenny Matt</td>
-                        <td>jenny.matt@example.com</td>
-                        <td><span class="badge badge-green">Author</span></td>
-                        <td>4</td>
-                        <td>
-                            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                                <a href="user-edit.php" class="btn btn-ghost">Edit</a>
-                                <a href="#" class="btn btn-ghost">Delete</a>
-                            </div>
-                        </td>
-                    </tr>
+                    <?php foreach ($users as $u): ?>
+                        <tr>
+                            <td>#<?php echo htmlspecialchars($u->id); ?></td>
+                            <td><?php echo htmlspecialchars($u->name); ?></td>
+                            <td><?php echo htmlspecialchars($u->email); ?></td>
+                            <td>
+                                <?php if ($u->role === 'admin'): ?>
+                                    <span class="badge badge-green">Admin</span>
+                                <?php else: ?>
+                                    <span class="badge badge-red">Author</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($u->posts_count ?? 0); ?></td>
+                            <td>
+                                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                                    <a href="user-edit.php?id=<?php echo $u->id; ?>" class="btn btn-ghost">
+                                        Edit
+                                    </a>
+
+                                    <form method="POST" style="display:inline;" onsubmit="return confirm('Naozaj vymazať?')">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="type" value="user">
+                                        <input type="hidden" name="id" value="<?php echo $u->id; ?>">
+                                        <button type="submit" class="btn btn-ghost" style="color:red; cursor:pointer;">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+
+                    <?php if (empty($users)): ?>
+                        <tr>
+                            <td colspan="6" style="text-align:center;">Žiadni používatelia neboli nájdení.</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

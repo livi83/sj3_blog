@@ -26,27 +26,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // jednoduchá validácia
     if ($title && $slug && $content && $user_id) {
+       $imageName = 'item1.jpg';
 
-        $imageName = 'item1.jpg';
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+        $uploadDir = __DIR__ . '/../../public/uploads/';
 
-        if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-            $uploadDir = __DIR__ . '/../../public/uploads/';
-
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            $originalName = $_FILES['image']['name'];
-            $tmpName = $_FILES['image']['tmp_name'];
-
-            $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-            $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
-
-            if (in_array($extension, $allowedExtensions)) {
-                $imageName = time() . '-' . basename($originalName);
-                move_uploaded_file($tmpName, $uploadDir . $imageName);
-            }
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
         }
+
+        $originalName = $_FILES['image']['name'];
+        $tmpName = $_FILES['image']['tmp_name'];
+
+        $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+
+        if (in_array($extension, $allowedExtensions)) {
+            $imageName = time() . '-' . basename($originalName);
+            move_uploaded_file($tmpName, $uploadDir . $imageName);
+        }
+    }
+        
         $post->create(
             $title,
             $slug,
@@ -59,9 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $categoryIds
         );
 
+
         header('Location: admin.php');
         exit;
-        print_r($_FILES);
+        
     }
 }
 
@@ -135,7 +136,7 @@ include 'partials/header-admin.php';
                 <input
                     type="file"
                     name="image"
-                    accept=".jpg,.png, .jpeg"
+                    accept=".jpg,.jpeg.,.png,.webp"
                     style="width:100%; padding:0.85rem 1rem;"
                 >
             </div>

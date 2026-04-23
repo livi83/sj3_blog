@@ -2,14 +2,13 @@
 
 class Helper
 {
-    //
     public static function getPageTitle(): string
     {
         $script = $_SERVER['SCRIPT_NAME'];
         $page = ucfirst(basename($script, '.php'));
         return 'TechBlog - ' . $page;
     }
-
+    
     public static function log(string $message): void
     {
         $dir = __DIR__ . '/../../storage';
@@ -26,5 +25,4 @@ class Helper
 
         file_put_contents($file, $formattedMessage, FILE_APPEND);
     }
-
 }

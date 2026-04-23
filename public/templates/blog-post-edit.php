@@ -40,33 +40,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($id && $title && $slug && $content && $user_id) {
-         $imageName = $singlePost->image;
-
         if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-            $uploadDir = __DIR__ . '/../../public/uploads/';
+        $uploadDir = __DIR__ . '/../../public/uploads/';
 
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            $originalName = $_FILES['image']['name'];
-            $tmpName = $_FILES['image']['tmp_name'];
-
-            $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-            $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
-
-            if (in_array($extension, $allowedExtensions)) {
-                $imageName = time() . '-' . basename($originalName);
-                move_uploaded_file($tmpName, $uploadDir . $imageName);
-            }
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
         }
+
+        $originalName = $_FILES['image']['name'];
+        $tmpName = $_FILES['image']['tmp_name'];
+
+        $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+
+        if (in_array($extension, $allowedExtensions)) {
+            $imageName = time() . '-' . basename($originalName);
+            move_uploaded_file($tmpName, $uploadDir . $imageName);
+        }
+    }
         $post->update(
             $id,
             $title,
             $slug,
             $excerpt,
             $content,
-            $image,
+            $imageName,
             $status,
             $user_id,
             $published_at,
@@ -96,7 +94,7 @@ include 'partials/header-admin.php';
             <span class="badge badge-red">Edit</span>
         </div>
 
-        <form method="POST" style="padding:0 1.5rem 1.5rem;">
+        <form method="POST" enctype="multipart/form-data" padding:0 1.5rem 1.5rem;">
 
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($singlePost->id); ?>">
 
@@ -145,10 +143,20 @@ include 'partials/header-admin.php';
 
             <div style="margin-bottom:1rem;">
                 <label>Obrázok</label>
+                <?php if ($singlePost->image): ?>
+                    <div style="margin-bottom:0.75rem;">
+                        <img 
+                            src="../uploads/<?php echo htmlspecialchars($singlePost->image); ?>" 
+                            alt="Post image" 
+                            style="max-width:200px; max-height:200px; border:1px solid #ddd; 
+                            padding:0.5rem; border-radius:4px;"
+                        >
+                    </div>
+                <?php endif; ?>
                 <input
-                    type="text"
+                    type="file"
                     name="image"
-                    value="<?php echo htmlspecialchars($singlePost->image); ?>"
+                    accept=".jpg,.jpeg,.png,.webp"
                     style="width:100%; padding:0.85rem 1rem;"
                 >
             </div>

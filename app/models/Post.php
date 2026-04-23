@@ -13,7 +13,10 @@ class Post
     public function all(): array
     {
         try {
-            $stmt = $this->db->query("SELECT * FROM posts ORDER BY created_at DESC");
+            $stmt = $this->db->query("SELECT posts.*, users.name as author_name 
+            FROM posts 
+            JOIN users ON posts.user_id = users.id 
+            ORDER BY posts.created_at DESC");
             return $stmt->fetchAll();
         } catch (PDOException $e) {
             Helper::log("Post::all ERROR: " . $e->getMessage(), 'ERROR');
@@ -57,7 +60,8 @@ class Post
             $this->db->commit();
             return true;
         } catch (PDOException $e) {
-            if ($this->db->inTransaction()) $this->db->rollBack();
+            if ($this->db->inTransaction()) 
+            $this->db->rollBack();
             Helper::log("Post::create ERROR: " . $e->getMessage(), 'ERROR');
             return false;
         }
