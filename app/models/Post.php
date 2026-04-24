@@ -60,8 +60,7 @@ class Post
             $this->db->commit();
             return true;
         } catch (PDOException $e) {
-            if ($this->db->inTransaction()) 
-            $this->db->rollBack();
+            if ($this->db->inTransaction()) $this->db->rollBack();
             Helper::log("Post::create ERROR: " . $e->getMessage(), 'ERROR');
             return false;
         }

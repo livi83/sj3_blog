@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($name !== '' && $email !== '' && $password !== '') {
         $user->create($name, $email, $password, $role, $bio);
-        header('Location: admin.php');
+        Redirect::redirect('admin.php');
         exit;
     }
 }

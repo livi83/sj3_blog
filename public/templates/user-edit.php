@@ -7,14 +7,14 @@ $user = new User();
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if ($id <= 0) {
-    header('Location: admin.php');
+    Redirect::redirect('admin.php');
     exit;
 }
 
 $u = $user->find($id);
 
 if (!$u) {
-    header('Location: admin.php');
+    Redirect::redirect('admin.php');
     exit;
 }
 
@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($name !== '' && $email !== '') {
         $user->update($id, $name, $email, $password, $role, $bio);
-        header('Location: admin.php');
-        exit;
+        Redirect::redirect('admin.php');
+    exit;
     }
 }
 

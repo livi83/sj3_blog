@@ -23,8 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $user->delete($id);
         }
     }
-
-    header('Location: admin.php');
+    Redirect::redirect('admin.php');
     exit;
 }
 
